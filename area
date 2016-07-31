@@ -1,0 +1,153 @@
+
+import React, { Component } from 'react';
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  PixelRatio,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView
+} from 'react-native';
+
+import ScrollableTabView from './scrollableTab';
+
+class app extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      sfv:'请选择'
+    };
+  }
+  componentWillMount(){
+    fetch('http://www.sucaihuo.com/jquery/0/34/demo/city.min.js', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((res) => {
+            return res.json();
+        }).then((json) => {
+            this.setState({
+              sf:json['citylist']
+            });
+        }).catch((err) => {
+           
+        }).done();
+  }
+
+  xzsf(data,csData,i){
+    console.log(this.copm);
+      if(data !== this.state.sfv){
+            this.setState({
+            sfv:data,
+            csData:csData,
+            csv:'请选择',
+            xxv:null,
+            font:i,
+            gg:1
+          });
+      }
+      setTimeout(()=>{
+        this.copm.goToPage(1);
+      },0);
+  }
+  xzcs(data,xxData){
+      if(data !== this.state.csv){
+          this.setState({
+            csv:data,
+            xxData:xxData,
+            xxv:'请选择'
+          });
+      }
+      setTimeout(()=>{
+        this.copm.goToPage(2);
+      },0);
+  }
+  xzxx(data){
+      this.setState({
+        xxv:data,
+      });
+  }
+
+  render(){
+  
+    if(this.state.sf){
+      return (
+        <View style={{flex: 1}}>
+        <ScrollableTabView
+          ref={(copm)=>{this.copm = copm}}
+          initialPage={this.state.gg || 0}//从市跳区的时候页面默认从第一页开始跳 所以设置一下起始页
+        >
+            <First onprs={this.xzsf.bind(this)} res={this.state.sf} font={this.state.font} tabLabel={this.state.sfv}/>
+            {this.state.csv ? <Tow onprs={this.xzcs.bind(this)} res={this.state.csData} tabLabel={this.state.csv}/> : null}
+            {this.state.xxv ? <There onprs={this.xzxx.bind(this)} res={this.state.xxData} tabLabel={this.state.xxv}/> : null}
+        </ScrollableTabView>
+        </View>
+        );
+    }
+    return(<View style={{flex: 1}}><Text>1111111111111</Text></View>)
+   
+  }
+}
+class First extends Component {
+  render(){
+      var res = [];
+      for(var i in this.props.res){
+          var text = (<TouchableOpacity onPress={this.props.onprs.bind(this,this.props.res[i]['p'],this.props.res[i]['c'],i)} key={i}><Text style={this.props.font == i?[styles.resMian,styles.font]:styles.resMian}>{this.props.res[i]['p']}</Text></TouchableOpacity>);
+          res.push(text);
+      }
+
+    return(
+      <View style={styles.item}>{res}</View>
+    )
+  }
+
+}
+class Tow extends Component {
+   render(){
+      var res = [];
+      for(var i in this.props.res){
+          var text = (<TouchableOpacity onPress={this.props.onprs.bind(this,this.props.res[i]['n'],this.props.res[i]['a'])} key={i}><Text style={styles.resMian}>{this.props.res[i]['n']}</Text></TouchableOpacity>);
+          res.push(text);
+      }
+
+    return(
+      <View style={styles.item}>{res}</View>
+    )
+  }
+
+}
+class There extends Component {
+  render(){
+      var res = [];
+      for(var i in this.props.res){
+          var text = (<TouchableOpacity onPress={this.props.onprs.bind(this,this.props.res[i]['s'])} key={i}><Text style={styles.resMian}>{this.props.res[i]['s']}</Text></TouchableOpacity>);
+          res.push(text);
+      }
+
+    return(
+      <View style={styles.item}>{res}</View>
+    )
+  }
+
+}
+
+const styles = StyleSheet.create({
+    item:{
+        paddingLeft:15,
+        paddingTop:15,
+        paddingBottom:15,
+    },
+    resMian:{
+       paddingTop:15,
+       paddingBottom:15,
+    },
+    font:{
+      color:'red'
+    }
+});
+
+AppRegistry.registerComponent('app', () => app);
