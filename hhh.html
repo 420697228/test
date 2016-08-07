@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="div">dwd</div>
+<script>
+    var throttle = function (fn,interval) {
+        var _self = fn,
+            timer,
+            firstTime = true;
+        return function () {
+            var args = arguments,
+                _me = this;
+            if(firstTime){
+                _self.apply(_me,args);
+                return firstTime = false;
+            }
+            if(timer){
+                return false;
+            }
+            timer = setInterval(function () {
+                clearInterval(timer);
+                timer = null;
+                _self.apply(_me,args);
+            },interval || 500)
+        };
+    };
+
+    var timeChunk = function (ary,fn,count) {
+        var obj, t;
+        var strt = function () {
+            for(var i=0;i<Math.min(count || 1,ary.length);i++){
+                var obj = ary.shift();
+                fn(obj);
+            }
+        };
+        return function () {
+            t = setInterval(function () {
+                if(ary.length === 0){
+                    return clearInterval(t);
+                }
+                strt();
+            },1000)
+        };
+    };
+    var ary = [];
+    for(var i = 1;i<10000;i++){
+        ary.push(i);
+    };
+    var randerFriendList = timeChunk (ary,function (n){
+            var div = document.createElement('div');
+            div.innerHTML = n;
+            document.body.appendChild(div);
+    },8);
+//    randerFriendList();
+
+    var a = 555;
+    var getSingle = function (fn) {
+        var result;
+        return function () {
+            return result || (result = fn.apply(this,arguments));
+        };
+    };
+
+    var bindEvent = getSingle(function () {
+        console.log(a);
+        document.getElementById('div').onclick = function () {
+            alert(5);
+        };
+        return true;
+    });
+    var render = function () {
+        console.log('开始渲染列表');
+//        bindEvent(a);
+    };
+    render();
+    render();
+    render();
+
+    var resList = [];
+    for(var i = 0;i<1000;i++){
+        resList.push(i);
+    }
+    var renderList = function (data) {
+        for(var i= 0,len = data.length;i<len;i++){
+            var div = document.createElement('div');
+            div.innerHTML = i;
+            document.body.appendChild(div);
+        }
+    };
+//    renderList(resList);
+
+    var timeChunk = function (data,fn,count) {
+        var t = null,
+          obj = null,
+        start = function () {
+            for(var i = 0,len = Math.min(count || 1,data.length);i<len;i++){
+                obj = data.shift();
+                fn(obj);
+            }
+        };
+        return function () {
+            t = setInterval(function () {
+                if(data.length === 0){
+                    clearInterval(t);
+                    t = null;
+                }
+                start();
+            },200);
+        }
+    };
+
+    var renderFirend = timeChunk(resList,function (n) {
+        var div = document.createElement('div');
+        div.innerHTML = n;
+        document.body.appendChild(div);
+    },10);
+
+//    renderFirend();
+
+    var Event = (function () {
+        var global = this,
+            Event,
+            _default = 'default';
+        Event = function () {
+            var _listen,
+                _trigger,
+                _remove,
+                _slice = [].slice,
+                _shift = [].shift,
+                _unshift = [].unshift,
+                namespaceCache = {},
+                _create,
+                find,
+                each = function (arr,fn){
+                    var ret;
+                    for(var i = 0,l = arr.length;i < l;i++){
+                        var n = arr[i];
+                        ret = fn.call(n,i,n);
+                    }
+                    return ret;
+                };
+            _listen = function (key,fn,cache){
+                if(!cache[key]){
+                    cache[key] = [];
+                }
+                cache[key].push(fn);
+            };
+            _remove = function (key,cache,fn) {
+                if(cache[key]){
+                    if(fn){
+                        for(var i = cache[key].length;i>=0;i--){
+                           if(cache[key] === fn){
+                               cache[key].splice(i,1);
+                           }
+                        }
+                    }else{
+                        cache[key] = [];
+                    }
+                }
+            };
+            _trigger = function () {
+                var cache = _shift.call(arguments),
+                    key = _shift.call(arguments),
+                    args = arguments,
+                    _self = this,
+                    ret,
+                    stack = cache[key];
+                if(!stack || !stack.length){
+                    return;
+                }
+                return each(stack,function () {
+                    return this.apply(_self,args);
+                })
+            };
+            _create = function (namespace) {
+                var namespace = namespace || _default;
+                var cache = {},
+                    offlineStack = [],
+                    ret = {
+                        listen: function (key,fn,last) {
+                            _listen(key,fn,cache);
+                            if(offlineStack === null){
+                                return;
+                            }
+                            if(last === 'last'){
+                                offlineStack.length && offlineStack.pop()();
+                            }else{
+                                each(offlineStack,function () {
+                                    this();
+                                });
+                            }
+                            offlineStack = null;
+                        },
+                        one : function (key,fn,last) {
+                            _remove(key,cache);
+                            this.listen(key,fn,last);
+                        },
+                        remove : function (key,fn) {
+                            _remove(key,cache,fn);
+                        },
+                        trigger : function () {
+                            var fn,
+                                args,
+                                _self = this;
+                            _unshift.call(arguments,cache);
+                            args = arguments;
+                            fn = function () {
+                                return _trigger.apply(_self,args);
+                            };
+                            if(offlineStack){
+                                return offlineStack.push(fn);
+                            }
+                            return fn();
+                        }
+                    };
+                return namespace ? (namespaceCache[namespace] ? namespaceCache[namespace] : namespaceCache[namespace] = ret) : ret;
+            };
+            return {
+                create : _create,
+                one : function (key,fn,last){
+                    var event = this.create();
+                    event.one(key,fn,last);
+                },
+                remove : function (key,fn) {
+                    var event = this.create();
+                    event.remove(key,fn);
+                },
+                listen : function (key,fn,last) {
+                    var event = this.create();
+                        event.listen(key,fn,last);
+                },
+                trigger : function () {
+                    var event = this.create();
+                    event.trigger.apply(this,arguments);
+                }
+            }
+        }();
+        return Event;
+    })();
+
+//    Event.trigger('click',1);
+//    document.getElementById('div').onclick = function () {
+//            Event.listen('click',function (a) {
+//                    alert(a);
+//                })
+//    };
+//
+//    var watcher = {
+//        clientList : [],
+//        listen : function (key,fn) {
+//            if(!this.clientList[key]){
+//                this.clientList[key] = [];
+//            }
+//            this.clientList[key].push(fn);
+//        },
+//        trigger : function () {
+//            var key = Array.prototype.shift.call(arguments),
+//                fns = this.clientList[key];
+//            if(!fns || fns.length === 0){
+//                return false;
+//            }
+//            for(var i= 0,fn;fn = fns[i++];){
+//                fn.apply(this,arguments);
+//            }
+//        }
+//    };
+//
+//    var installEvent = function (obj) {
+//        for(var i in watcher){
+//            obj[i] = watcher[i];
+//        }
+//    };
+//
+//    var aa = {};
+//
+//    installEvent(aa);
+
+//    aa.listen('zhg',function (a) {
+    //        alert(a);
+    //    });
+    //    aa.listen('hg',function (a) {
+    //       alert(a)
+    //    });
+    //    aa.trigger('hg',4);
+    //    aa.trigger('zhg',44);
+    //    console.log(watcher);
+
+    var watcher = {
+        clientList : [],
+        listen : function (key,fn) {
+            if(!this.clientList[key]){
+                this.clientList[key] = [];
+            }
+            this.clientList[key].push(fn);
+        },
+        trigger : function () {
+            var key = Array.prototype.shift.call(arguments),
+                fns = this.clientList[key];
+            if(!fns || fns.length === 0){
+                return false;
+            }
+            for(var i = 0,fn;fn = fns[i++];){
+                fn.apply(this,arguments);
+            }
+        },
+        remove : function (key,fn) {
+            var fns = this.clientList[key];
+            if(!fns){
+                return false;
+            }
+            if(!fn){
+                fns && (fns.length = 0);
+            }else{
+                for(var i = fns.length-1;i>=0;i--){
+                    var _fn = fns[i];
+                    if(_fn === fn){
+                        fns.splice(i,1);
+                    }
+                }
+            }
+        }
+    };
+
+    var installEvent = function (obj) {
+        for(var i in watcher){
+            obj[i] = watcher[i];
+        }
+    };
+
+    var zhg = {};
+
+    installEvent(zhg);
+
+    zhg.listen('zhg',function (a) {
+        alert(a);
+    });
+    zhg.listen('zhg',function (a) {
+        console.log(111111111);
+    });
+//    zhg.remove('zhg');
+    zhg.trigger('zhg',88888888);
+
+    var Folder = function (name) {
+        this.name = name;
+        this.files = [];
+    };
+    Folder.prototype.add = function (file) {
+        this.files.push(file);
+    };
+    Folder.prototype.scan = function () {
+        console.log('开始扫描文件夹：'+this.name);
+        for(var i= 0,file,files=this.files;file=files[i++];){
+            file.scan();
+        }
+    };
+    var File = function (name) {
+        this.name = name;
+    };
+    File.prototype.add = function () {
+        throw new Error('文件下面不能再添加文件');
+    };
+    File.prototype.scan = function () {
+        console.log('开始扫描文件：'+this.name);
+    };
+    var folder = new Folder('学习资料');
+    var folder1 = new Folder('javascript');
+    var folder2= new Folder('jquery');
+
+    var file1 = new File('javascript设计模式');
+    var file2 = new File('精通jquery');
+    var file3 = new File('重构与模式');
+
+    folder1.add(file1);
+    folder1.add(file2);
+
+    folder.add(folder1);
+    folder.add(folder2);
+    folder.add(file3);
+
+    var folder3 = new Folder('Node.js');
+    var file4 = new File('深入浅出node');
+    folder.add(file4);
+
+    var file5 = new File('javascript');
+
+    folder.add(folder3);
+    folder.add(file5);
+
+    folder.scan();
+
+
+</script>
+</body>
+</html>
