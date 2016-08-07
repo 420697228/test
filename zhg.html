@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        #div1{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+        }
+    </style>
+    <script>
+
+        //                            _ooOoo_
+        //                           o8888888o
+        //                           88" . "88
+        //                           (| -_- |)
+        //                            O\ = /O
+        //                        ____/`---'\____
+        //                      .   ' \\| |// `.
+        //                       / \\||| : |||// \
+        //                     / _||||| -:- |||||- \
+        //                       | | \\\ - /// | |
+        //                     | \_| ''\---/'' | |
+        //                      \ .-\__ `-` ___/-. /
+        //                   ___`. .' /--.--\ `. . __
+        //                ."" '< `.___\_<|>_/___.' >'"".
+        //               | | : `- \`.;`\ _ /`;.`/ - ` : | |
+        //                 \ \ `-. \_ __\ /__ _/ .-` / /
+        //         ======`-.____`-.___\_____/___.-`____.-'======
+        //                            `=---='
+        //
+        //         .............................................
+        //                  佛祖保佑             永无BUG
+
+        window.onload = function () {
+            oDiv.onmousedown = function (ev) {
+                var oEv = ev||event;
+                var disX = oEv.clientX - oDiv.offsetLeft;
+                var disY = oEv.clientY - oDiv.offsetTop;
+
+                document.onmousemove = function (ev) {
+                    var oEv = ev||event;
+                    oDiv.style.left = oEv.clientX - disX + "px";
+                    oDiv.style.top = oEv.clientY - disY + "px";
+                }
+                document.onmouseup = function (){
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                }
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+<div id="div1"></div>
+</body>
+</html>
