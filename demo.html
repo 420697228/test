@@ -123,7 +123,7 @@ var hhh = function (top) {
 	$('.div').eq(0).offset().top <= top+400 ? $('.ul').removeClass('none') : $('.ul').addClass('none');
 
 	for(var i = 0;i<$('.div').length;i++){
-			if($('.div').eq(i).offset().top <= top+400){
+			if($('.div').eq(i).offset().top <= top+400+50*i){
 				$('.ul li').eq(i).addClass('active').siblings().removeClass('active');
 			}
 	}
