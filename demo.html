@@ -1,0 +1,139 @@
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+<meta charset="UTF-8"> 
+<meta name="viewport" content="width=device-width, minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>判断鼠标进入方向</title> 
+<style>
+body{
+	height: 5500px;
+}
+ul{
+	position: fixed;
+	top: 400px;
+	z-index: 111;
+}
+ul li{
+	list-style: none;
+	line-height: 50px;
+	width: 80px;
+	text-align: center;
+	background: #666;
+	margin-bottom: 10px;
+}
+.none{
+	display: none;
+}
+div{
+	width: 100%;
+	height: 50px;
+	background: red;
+	position: absolute;
+}
+
+.d2{
+	top: 1200px;
+}
+.d3{
+	top: 2000px;
+}
+.d4{
+	top: 3200px;
+}
+.d5{
+	top: 4500px;
+}
+.active{
+	background: red;
+}
+</style>
+</head> 
+<body> 
+<script type="text/javascript" src="jquery-1.11.2.min.js"></script> 
+
+
+<ul class="none ul">
+	<li>1</li>
+	<li>2</li>
+	<li>3</li>
+	<li>4</li>
+</ul>
+
+<div class="d2 div">2</div>
+<div class="d3 div">3</div>
+<div class="d4 div">4</div>
+<div class="d5 div">5</div>
+
+<script>
+	// var book = {
+	// 	year : 2015,
+	// 	_juli : 0
+	// };
+	// Object.defineProperty(book,'year',{
+	// 	get:function () {
+	// 		console.log(this);
+	// 		return 45;
+	// 		// return this.year;
+	// 	},
+	// 	set:function (newValue) {
+	// 		if(newValue > 2016){
+	// 			// this._year = newValue;
+	// 			console.log(this,5555)
+	// 			this._juli += newValue - 2016;
+	// 		}
+	// 	}
+	// });
+	// book.year = 2018;
+	// console.log(book._juli);
+
+
+	// var A = [{a: 'z',b:1}, {a: 'h',b:2}, {a: 'g',b:3}],
+	// 	B = {};
+	// A.forEach(function (ele) {
+	// 		B[ele.a] = ele.b;
+	// });
+	// console.log(B)
+	// 一个节流函数而已 主要是防止滚动的时候滚动事件触发太多次 这里可以忽略
+var throttle = function (fn,interval){
+	var _self = fn,
+		timer,
+		firstTime = true;
+
+		return function () {
+			var args = arguments,
+				_me = this;
+			if(firstTime){
+				_self.apply(_me,args);
+				return firstTime = false;
+			}
+			if(timer){
+				return false;
+			}	
+			timer = setTimeout(function() {
+				clearTimeout(timer);
+				timer = null;
+				_self.apply(_me,args);
+			},interval || 500);
+		};
+};
+
+var hhh = function (top) {
+
+	$('.div').eq(0).offset().top <= top+400 ? $('.ul').removeClass('none') : $('.ul').addClass('none');
+
+	for(var i = 0;i<$('.div').length;i++){
+			if($('.div').eq(i).offset().top <= top+400){
+				$('.ul li').eq(i).addClass('active').siblings().removeClass('active');
+			}
+	}
+};
+
+$(document).scroll(throttle(function () {
+	hhh($(this).scrollTop());
+},50));
+
+</script>
+
+</body> 
+</html> 
