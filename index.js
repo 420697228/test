@@ -9,7 +9,7 @@ var S = {
     if (i !== -1) {
       S.UI.simulate(decodeURI(action).substring(i + 3));
     } else {
-      S.UI.simulate("臭|嗨|3|2|1|Orz");
+      S.UI.simulate("逗|比|青|3|2|1|要|开|心|Orz");
     }
 
     S.Drawing.loop(function () {
