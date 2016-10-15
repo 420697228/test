@@ -9,7 +9,7 @@ var S = {
     if (i !== -1) {
       S.UI.simulate(decodeURI(action).substring(i + 3));
     } else {
-      S.UI.simulate("臭嗨|准备|好了吗|3|2|1||");
+      S.UI.simulate("臭|嗨|3|2|1||");
     }
 
     S.Drawing.loop(function () {
