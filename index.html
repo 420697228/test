@@ -103,6 +103,7 @@
                 alignWidth = (winWidth-aWidth)/2,
                 startPoint = 0,
                 startEle = 0,
+                startTime = 0,
                 now = 0;
 
         // for(var j = 0;j<aLi.length;j++){
@@ -119,6 +120,7 @@
             now = getNow();
             startPoint = e.changedTouches[0].pageX;
             startEle = -now*aWidth+alignWidth;
+            startTime = +new Date();
         });
         wrap.addEventListener("touchmove",function(e){
             var endPoint = e.changedTouches[0].pageX;
@@ -133,7 +135,16 @@
         });
         wrap.addEventListener("touchend",function(e){
             var moveX = cssTransform(box,"translate3d")-alignWidth;
+            var nowPoint = e.changedTouches[0].pageX;
+            var nowTime = +new Date();
+            if(nowPoint == startPoint){
+                return;
+            }
             now = Math.round(-moveX/aWidth);
+            if((nowTime-startTime) <= 200){
+                nowPoint > startPoint ? now-- : now++;
+            }
+            
             tab();
             // console.log(now%(aLi.length/3));
         });
