@@ -1,67 +1,144 @@
+
 <!DOCTYPE html>
-<html>
-<head lang="en">
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>测试测试</title>
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <title>Title</title>
     <style>
-        *{
-            padding: 0;
-            margin: 0;
-        }
-        #div1{
-            width: 100px;
-            height: 100px;
-            background: red;
-            position: absolute;
+        html,body{
+            /*background-color: red;*/
         }
     </style>
-    <script>
-
-        //                            _ooOoo_
-        //                           o8888888o
-        //                           88" . "88
-        //                           (| -_- |)
-        //                            O\ = /O
-        //                        ____/`---'\____
-        //                      .   ' \\| |// `.
-        //                       / \\||| : |||// \
-        //                     / _||||| -:- |||||- \
-        //                       | | \\\ - /// | |
-        //                     | \_| ''\---/'' | |
-        //                      \ .-\__ `-` ___/-. /
-        //                   ___`. .' /--.--\ `. . __
-        //                ."" '< `.___\_<|>_/___.' >'"".
-        //               | | : `- \`.;`\ _ /`;.`/ - ` : | |
-        //                 \ \ `-. \_ __\ /__ _/ .-` / /
-        //         ======`-.____`-.___\_____/___.-`____.-'======
-        //                            `=---='
-        //
-        //         .............................................
-        //                  佛祖保佑             永无BUG
-
-        window.onload = function () {
-            var oDiv = document.getElementById('div1');
-            oDiv.onmousedown = function (ev) {
-                var oEv = ev||event;
-                var disX = oEv.clientX - oDiv.offsetLeft;
-                var disY = oEv.clientY - oDiv.offsetTop;
-
-                document.onmousemove = function (ev) {
-                    var oEv = ev||event;
-                    oDiv.style.left = oEv.clientX - disX + "px";
-                    oDiv.style.top = oEv.clientY - disY + "px";
-                }
-                document.onmouseup = function (){
-                    document.onmousemove = null;
-                    document.onmouseup = null;
-                }
-            }
-
-        }
-
-    </script>
 </head>
 <body>
-<div id="div1"></div>
+
+<script>
+    window.onload = function (){
+
+        var body = document.body;
+        var goodsData = [{
+                pic:12.5,
+                num:0,
+                total:0
+            },
+            {
+                pic:3.5,
+                num:0,
+                total:0
+            },{
+                pic:15,
+                num:0,
+                total:0
+            },{
+                pic:8.5,
+                num:0,
+                total:0
+            }];
+        var goodsCount = {
+            goodsTotal : 0,
+            spend: 0,
+            priceTop : 0
+        };
+
+        function init(){
+            var html = goodsData.map(function (item,i){
+                return(`<div>
+                        <button class="mins">-</button>
+                        <span>${item.num}</span>
+                        <button class="add">+</button>
+                        <span>单价:${item.pic}元 小计:${item.total}</span>
+                    </div>`);
+            });
+
+            html = html.join(',').replace(/,/g,'');
+
+            var goodsCountHtml = `<div>
+                                   <div><span>商品合计共:<span style="color: red">${goodsCount.goodsTotal}</span>,共花费了:<span style="color: red">${goodsCount.spend}</span></span></div>
+                                   <div><span>其中最贵的商品单价是:<span style="color: red">${goodsCount.priceTop}</span></span></div>
+                              </div>`;
+
+            html = html + goodsCountHtml;
+
+            body.innerHTML = html;
+
+            var minsBtn = document.querySelectorAll('.mins');
+            var addBtn = document.querySelectorAll('.add');
+
+            //各种计算的总方法
+            function countPrice(){
+                //循环数据取出所有单个商品总价数组
+                var totalArr = goodsData.map(function(item,i){
+                    return item.total;
+                });
+                //循环数据取出所有单个商品数量数组
+                var numTotal = goodsData.map(function(item,i){
+                    return item.num;
+                });
+
+                console.log(totalArr,'单个商品总价');
+                console.log(numTotal,'单个商品数量');
+
+                //算最贵商品
+                var bigNum = Math.max.apply(null,totalArr);
+
+                //算总花费
+                var spend = totalArr.reduce(function(a,b){
+                    return a+b;
+                });
+
+                //算商品总数
+                var goodsTotal = numTotal.reduce(function(a,b){
+                    return a+b;
+                });
+
+                goodsCount.goodsTotal = goodsTotal;//商品总数
+                goodsCount.spend = spend;//总花费
+                goodsCount.priceTop = goodsData[totalArr.indexOf(bigNum)]['pic'];//最贵的商品单价
+            }
+
+            //减商品
+            minsBtn.forEach(function (item,i) {
+                minsBtn[i].addEventListener('click',function(e){
+                    //必要判断
+                    if(goodsData[i].num == 0){
+                        alert('小于0件还买你妹啊');
+                        return;
+                    }
+                    //减完商品计算花费
+                    goodsData[i].num --;
+                    goodsData[i].total = goodsData[i].num * goodsData[i]['pic'];
+
+                    //减完商品要实时各种计算
+                    countPrice();
+
+                    //数据更新后重新渲染页面
+                    init();
+                })
+            });
+
+            //加商品
+            addBtn.forEach(function (item,i) {
+                addBtn[i].addEventListener('click',function(e){
+
+                    //加完商品计算花费
+                    goodsData[i].num ++;
+                    goodsData[i].total = goodsData[i].num * goodsData[i].pic;
+
+                    //加完商品要实时各种计算
+                    countPrice();
+
+                    //数据更新后重新渲染页面
+                    init();
+                })
+            });
+        }
+
+        //页面进入初始化渲染
+        init();
+    }
+</script>
+
 </body>
+
 </html>
