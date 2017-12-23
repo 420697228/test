@@ -155,11 +155,10 @@ var WINDOW_WIDTH = document.body.clientWidth || 375;
 var WINDOW_HEIGHT = 200;
 var RADIUS = 8;
 var MARGIN_TOP = 60;
-var MARGIN_LEFT = 30;
+var MARGIN_LEFT = 10;
 
 //定义截止时间
-var endTime = new Date();
-endTime.setTime(endTime.getTime() + 60 * 1000);
+var dayTime = 0;
 
 var curShowTimeSeconds = 0;
 
@@ -171,8 +170,8 @@ window.onload = function() {
 //    WINDOW_WIDTH = document.body.clientWidth;
 //    WINDOW_HEIGHT = document.body.clientHeight;
     
-    MARGIN_LEFT = Math.round(WINDOW_WIDTH / 10);
-    MARGIN_TOP = Math.round(WINDOW_HEIGHT / 5);
+    // MARGIN_LEFT = Math.round(WINDOW_WIDTH / 100);
+    MARGIN_TOP = Math.round(WINDOW_HEIGHT / 2);
     
     RADIUS = Math.round(WINDOW_WIDTH * 4 /5 /108) - 1;
     
@@ -182,33 +181,40 @@ window.onload = function() {
     canvas.height = WINDOW_HEIGHT;
     
     curShowTimeSeconds = getCurrentShowTimeSeconds();
-    
+    console.log(curShowTimeSeconds);
     setInterval(function(){
         render(context);
-        update();
+        update(context);
     },50);   
 };
 //返回以秒数表示的当前时间
 function getCurrentShowTimeSeconds() {
     var curTime = new Date();
-    var ret = endTime.getTime() - curTime.getTime();
-    ret = Math.round(ret/1000);
+    var oldTime = new Date('2017/10/25 20:00:00');
+    var ret = curTime.getTime() - oldTime.getTime();
 //    var ret = curTime.getHours()*3600+curTime.getMinutes()*60+curTime.getSeconds();
     return ret >= 0? ret : 0;
 //    return ret;
 }
 //更新操作
-function update() {
+function update(context) {
     var nextShowTimeSeconds = getCurrentShowTimeSeconds();
-    var nextHours = parseInt(nextShowTimeSeconds / 3600);
-    var nextMinutes = parseInt((nextShowTimeSeconds-nextHours*3600)/60);
-    var nextSeconds = nextShowTimeSeconds % 60;
+
+    var nextDays = parseInt(nextShowTimeSeconds / (1000 * 60 * 60 * 24));
+
+    var nextHours = parseInt((nextShowTimeSeconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var nextMinutes = parseInt((nextShowTimeSeconds % (1000 * 60 * 60)) / (1000 * 60));
+    var nextSeconds = (nextShowTimeSeconds % (1000 * 60)) / 1000;
+
+    var curHours = parseInt((curShowTimeSeconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var curMinutes = parseInt((curShowTimeSeconds % (1000 * 60 * 60)) / (1000 * 60));
+    var curSeconds = (curShowTimeSeconds % (1000 * 60)) / 1000;
     
-    var curHours = parseInt(curShowTimeSeconds / 3600);
-    var curMinutes = parseInt((curShowTimeSeconds-curHours*3600)/60);
-    var curSeconds = curShowTimeSeconds % 60;
-    
+    console.log(curShowTimeSeconds,nextShowTimeSeconds,nextSeconds,curSeconds);
     if(nextSeconds != curSeconds) {
+        context.font = '38px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
+        context.fillText('我们已经认识了'+nextDays+'天',10,66);
+        
         if(parseInt(curHours/10) != parseInt(nextHours/10)) {
             addBalls(MARGIN_LEFT+0,MARGIN_TOP,parseInt(curHours/10));
         }
@@ -230,7 +236,7 @@ function update() {
         curShowTimeSeconds = nextShowTimeSeconds;
     }
     updateBalls(); //对所有已经存在的小球的状态进行更新
-    console.log(balls.length);
+    // console.log(balls.length);
 }
 //对所有已经存在的小球的状态进行更新
 function updateBalls() {
@@ -278,23 +284,27 @@ function addBalls(x,y,num) {
 //绘制当前时间
 function render(context) {
     context.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
-    
-    var hours = parseInt(curShowTimeSeconds / 3600);
-    var minutes = parseInt((curShowTimeSeconds - hours * 3600)/ 60);
-    var seconds = curShowTimeSeconds % 60;
+    context.font = '19px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
+    var hours = parseInt((curShowTimeSeconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = parseInt((curShowTimeSeconds  % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = (curShowTimeSeconds % (1000 * 60)) / 1000;
     
     renderMatrix(MARGIN_LEFT, MARGIN_TOP, parseInt(hours/10), context); //十位上的数字
     renderMatrix(MARGIN_LEFT + (7 * 2 +1 )*(RADIUS+1),MARGIN_TOP,parseInt(hours % 10),context); //个位上的数字
     
-    renderMatrix(MARGIN_LEFT + 30*(RADIUS+1),MARGIN_TOP,10,context); //冒号
+    // renderMatrix(MARGIN_LEFT + 30*(RADIUS+1),MARGIN_TOP,10,context); //冒号
+    context.fillText('小时',MARGIN_LEFT + 30*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (30 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(minutes / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 54*(RADIUS+1),MARGIN_TOP,parseInt(minutes % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (35 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(minutes / 10),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 59*(RADIUS+1),MARGIN_TOP,parseInt(minutes % 10),context); //个位上的数
     
-    renderMatrix(MARGIN_LEFT + 69*(RADIUS+1),MARGIN_TOP,10,context); //冒号
+    // renderMatrix(MARGIN_LEFT + 69*(RADIUS+1),MARGIN_TOP,10,context); //冒号
+    context.fillText('分',MARGIN_LEFT + 74.5*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (69 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(seconds / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 93 * (RADIUS+1),MARGIN_TOP,parseInt(seconds % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (73 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(seconds / 10),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 97 * (RADIUS+1),MARGIN_TOP,parseInt(seconds % 10),context); //个位上的数
+
+    context.fillText('秒',MARGIN_LEFT + 112.5*(RADIUS+1),160);
     
     for(var i = 0;i < balls.length;i++) {
         
