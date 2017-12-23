@@ -212,7 +212,7 @@ function update(context) {
     
     console.log(curShowTimeSeconds,nextShowTimeSeconds,nextSeconds,curSeconds);
     if(nextSeconds != curSeconds) {
-        context.font = '38px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
+        context.font = '36px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
         context.fillText('我们已经认识了'+nextDays+'天',10,66);
         
         if(parseInt(curHours/10) != parseInt(nextHours/10)) {
@@ -284,7 +284,7 @@ function addBalls(x,y,num) {
 //绘制当前时间
 function render(context) {
     context.clearRect(0,0,WINDOW_WIDTH,WINDOW_HEIGHT);
-    context.font = '19px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
+    context.font = '16px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
     var hours = parseInt((curShowTimeSeconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     var minutes = parseInt((curShowTimeSeconds  % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = (curShowTimeSeconds % (1000 * 60)) / 1000;
@@ -295,16 +295,16 @@ function render(context) {
     // renderMatrix(MARGIN_LEFT + 30*(RADIUS+1),MARGIN_TOP,10,context); //冒号
     context.fillText('小时',MARGIN_LEFT + 30*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (35 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(minutes / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 59*(RADIUS+1),MARGIN_TOP,parseInt(minutes % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (32 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(minutes / 10),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 56*(RADIUS+1),MARGIN_TOP,parseInt(minutes % 10),context); //个位上的数
     
     // renderMatrix(MARGIN_LEFT + 69*(RADIUS+1),MARGIN_TOP,10,context); //冒号
-    context.fillText('分',MARGIN_LEFT + 74.5*(RADIUS+1),160);
+    context.fillText('分',MARGIN_LEFT + 71.5*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (73 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(seconds / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 97 * (RADIUS+1),MARGIN_TOP,parseInt(seconds % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (70 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(seconds / 10),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 94 * (RADIUS+1),MARGIN_TOP,parseInt(seconds % 10),context); //个位上的数
 
-    context.fillText('秒',MARGIN_LEFT + 112.5*(RADIUS+1),160);
+    context.fillText('秒',MARGIN_LEFT + 109.5*(RADIUS+1),160);
     
     for(var i = 0;i < balls.length;i++) {
         
