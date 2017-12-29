@@ -93,3 +93,22 @@ article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,su
         -webkit-transform: scale(4);
     }
 }
+.load{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+}
+.load p{
+    font-size: 16px;
+    color:#fff;
+    font-weight: bold;
+    margin-top: 20px;
+}
