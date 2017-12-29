@@ -49,6 +49,10 @@
 	</style>
 </head>
 <body>
+	<div class="load">
+		<img src="hearts.svg" alt="">
+		<p>玩命加载中，大概需要等待5秒</p>
+	</div>
 	<div id="wrap">		
 	    <div id="imgs">
 	        <div>
@@ -1626,6 +1630,10 @@ function renderMatrix(x,y,num,context) {
 	$('.focusWrap').on('click',function(){
 		window.location.href = 'http://z_hg.legendh5.com/h5/z420697228.html';
 	});
+
+	setTimeout(function(){
+		$('.load').hide();
+	},5000);
    </script> 
 </body>
 </html>
