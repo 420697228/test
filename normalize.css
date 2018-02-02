@@ -14,12 +14,14 @@ article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,su
 	    border: 1px solid #fff;
 	    display: flex;
 	    justify-content: center;
-	    align-items: center;
 	    flex-direction: column;
 }
 .mid > div > p{
 	color: #fff;
-	font-size: 12px;
+    font-size: 14px;
+    /* margin-bottom: 20px; */
+    margin-left: 20px;
+    line-height: 24px;
 }
 .bg2 > p{
 	color: #f1598a;
