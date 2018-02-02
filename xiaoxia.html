@@ -1602,20 +1602,20 @@ function renders(context) {
     var minutes = parseInt((curShowTimeSeconds  % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = (curShowTimeSeconds % (1000 * 60)) / 1000;
     
-    renderMatrix(MARGIN_LEFT, MARGIN_TOP, parseInt(hours/10), context); //十位上的数字
-    renderMatrix(MARGIN_LEFT + (7 * 2 +1 )*(RADIUS+1),MARGIN_TOP,parseInt(hours % 10),context); //个位上的数字
+    renderMatrix(MARGIN_LEFT, MARGIN_TOP, parseInt(0), context); //十位上的数字
+    renderMatrix(MARGIN_LEFT + (7 * 2 +1 )*(RADIUS+1),MARGIN_TOP,parseInt(0),context); //个位上的数字
     
     // renderMatrix(MARGIN_LEFT + 30*(RADIUS+1),MARGIN_TOP,10,context); //冒号
     context.fillText('小时',MARGIN_LEFT + 30*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (32 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(minutes / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 56*(RADIUS+1),MARGIN_TOP,parseInt(minutes % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (32 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(0),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 56*(RADIUS+1),MARGIN_TOP,parseInt(0),context); //个位上的数
     
     // renderMatrix(MARGIN_LEFT + 69*(RADIUS+1),MARGIN_TOP,10,context); //冒号
     context.fillText('分',MARGIN_LEFT + 71.5*(RADIUS+1),160);
     
-    renderMatrix(MARGIN_LEFT + (70 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(seconds / 10),context); //十位上的数
-    renderMatrix(MARGIN_LEFT + 94 * (RADIUS+1),MARGIN_TOP,parseInt(seconds % 10),context); //个位上的数
+    renderMatrix(MARGIN_LEFT + (70 + (4 * 2 + 1))*(RADIUS+1),MARGIN_TOP,parseInt(0),context); //十位上的数
+    renderMatrix(MARGIN_LEFT + 94 * (RADIUS+1),MARGIN_TOP,parseInt(0),context); //个位上的数
 
     context.fillText('秒',MARGIN_LEFT + 109.5*(RADIUS+1),160);
     
