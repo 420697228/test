@@ -213,7 +213,7 @@ function update(context) {
     console.log(curShowTimeSeconds,nextShowTimeSeconds,nextSeconds,curSeconds);
     if(nextSeconds != curSeconds) {
         context.font = 'bold 36px Microsoft YaHei,Helvetica,Helvetica Neue,Tahoma,Arial,sans-serif';
-        context.fillText('我们已经认识了'+nextDays+'天',10,66);
+        context.fillText(nextDays,10,66);
         
         if(parseInt(curHours/10) != parseInt(nextHours/10)) {
             addBalls(MARGIN_LEFT+0,MARGIN_TOP,parseInt(curHours/10));
