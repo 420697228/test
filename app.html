@@ -1,188 +1,22 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8">
-    <title>哈哈哈</title>
-    <script type="text/javascript" src="jquery-1.11.2.min.js"></script>
-    <style type="text/css">
-        *{
-            margin: 0;
-            padding: 0;
-        }
-        #div1{
-            width: 1200px;
-            height: 150px;
-            top:100px;
-            left: 50%;
-            margin-left: -600px;
-            overflow: hidden;
-            position: absolute;
-        }
-        #ul{
-            position: absolute;
-            width: 10000px;
-            left: 0;
-        }
-        #ul li{
-            float: left;
-            margin-right: 10px;
-            width: 290px;
-            height: 150px;
-        }
-        #ul li img{
-            width: 290px;
-            height: 150px;
-        }
-        p{
-            position: absolute;
-            top: 350px;
-            cursor: pointer;
-            padding: 5px;
-            border: 1px solid #dcdcdc;
-        }
-        .zz{
-            left: 200px;
-        }
-        .yy{
-            right: 200px;
-        }
-    </style>
+
+  <meta charset="UTF-8">
+
+  <title>哈哈哈</title>
+
+  <link rel="stylesheet" href="a1.css">
+
+    <link rel="stylesheet" href="a.css" media="screen" type="text/css" />
+
 </head>
+
 <body>
-    <div id="div1">
-        <ul id="ul">
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/03/25/16/dolTOg_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/03/25/16/dolTOg_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/05/14/ywdQNa_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/03/25/16/dolTOg_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic3.40017.cn/gny/line/2016/01/07/09/iSUAbn_640x320_00.jpg" alt="">
-            </li>
-            <li>
-                <img src="http://pic4.40017.cn/gny/line/2016/04/13/14/yLARVk_640x320_00.jpg" alt="">
-            </li>
-        </ul>
-    </div>
-    <p class="zz">
-        zzzzzzzz
-    </p>
-    <p class="yy">
-        yyyyyyy
-    </p>
-    <script>
 
-        !function () {
-                var loopObj = {
-                    $ul : $('#ul'),
-                    $l : $('.zz'),
-                    $r : $('.yy'),
-                    $li : $('#ul li'),
-                    isAnimate : false //开始是没有运动的
-                };
+  <script src="a.js"></script>
 
-            loopObj.$l.unbind('click').bind('click',function () {
-                if(loopObj.isAnimate){return false;} //如果还在运动 那么就直接return
-                loopObj.isAnimate = true; //那么现在开始运动
-                var aa = loopObj.$li.slice(8,12),//点击左边按钮的时候，选出最后四个li
-                        i = 0,
-                        len = aa.length,
-                        currOffsetLeft = parseInt(loopObj.$ul.css('left'));
-                if(currOffsetLeft == 0){ //当距离左边为0时 把最后四个li拉到ul的前面
-                    for(;i<len;i++){
-                        (function () {
-                            $(aa[i]).css({
-                                position : 'relative',
-                                left : -3600
-                            });
-                        })(i)
-                    }
-                    loopObj.$ul.animate({  //然后向右移动一个ul的宽度 移动结束后最后的四个li会到本身的位置 然后把ul定位到距离左边-2400的位置
-                        left : 1200
-                    },300,function () {
-                        for(var j = 0;j<aa.length;j++){
-                            (function () {
-                                $(aa[j]).removeAttr("style");
-                            })(j)
-                        }
-                        loopObj.$ul.css('left',-2400);
-                        loopObj.isAnimate = false;
-                    });
-                }else {  //如果ul距离左边不是0的时候 距离左边直接加一个ul的宽度
-                    loopObj.isAnimate = true;
-                    var left = parseInt(loopObj.$ul.css('left')) + 1200;
-                    loopObj.$ul.animate({
-                        left : left
-                    },300,function () {
-                        loopObj.isAnimate = false;
-                    });
-                }
-            });
-
-            loopObj.$r.unbind('click').bind('click',function () {
-                if(loopObj.isAnimate){return false;}
-                loopObj.isAnimate = true;
-                var bb = loopObj.$li.slice(0,4),
-                        i = 0,
-                        len = bb.length,
-                        currOffsetLeft = parseInt(loopObj.$ul.css('left'));
-                if(currOffsetLeft == -2400){
-                    for(;i<len;i++){
-                        (function () {
-                            $(bb[i]).css({
-                                position : 'relative',
-                                left : 3600
-                            });
-                        })(i)
-                    }
-                    loopObj.$ul.animate({
-                        left : -3600
-                    },300,function () {
-                        for(var j = 0;j<bb.length;j++){
-                            (function () {
-                                $(bb[j]).removeAttr("style");
-                            })(j)
-                        }
-                        loopObj.$ul.css('left',0);
-                        loopObj.isAnimate = false;
-                    });
-                }else {
-                    loopObj.isAnimate = true;
-                    var left = parseInt(loopObj.$ul.css('left')) - 1200;
-                    loopObj.$ul.animate({
-                        left : left
-                    },300,function () {
-                        loopObj.isAnimate = false;
-                    });
-                }
-            });
-        }()
-
-    </script>
 </body>
+
 </html>
