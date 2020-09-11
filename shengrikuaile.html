@@ -385,7 +385,7 @@
     <rect x="10" y="475.571" fill="#fefae9" width="180" height="4" />
 </svg>
 <div class="text">
-  <p class="btn">点击领取生日礼物</p>
+  <p class="btn"id="btn">点击领取生日礼物</p>
 </div>
 
 </div>
@@ -395,7 +395,11 @@
             var oTxt = document.getElementById('txt');
             var box = document.getElementById('box');
 			var jl = document.getElementById('jl');
-			var hy = document.getElementById('hy');
+      var hy = document.getElementById('hy');
+      var btn = document.getElementById('btn');
+      btn.onclick = function(){
+        window.location.href = 'https://420697228.github.io/test/index.html';
+      };
 			function todb(v) {
 			    return v = v > 9 ? v : "0"+v;
 	        }
